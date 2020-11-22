@@ -1,0 +1,10 @@
+* source ADAC
+E_U1         N14512 0 VALUE {LIMIT(V(N14481,N14495)*1E6,-15V,+15V)}
+R_R1         N14495 N14512  80K TC=0,0 
+R_R2         N14548 N14495  10K TC=0,0 
+R_R3         N14528 N14481  10K TC=0,0 
+R_R4         0 N14481  90K TC=0,0 
+V_V1         N14548 0  
++SIN 0V 1V 1kHz 0 0 0
+V_V2         N14528 0  
++SIN 0V 2V 1kHz 0 0 0

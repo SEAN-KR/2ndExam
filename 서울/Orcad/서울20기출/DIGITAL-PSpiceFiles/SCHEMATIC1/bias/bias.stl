@@ -1,0 +1,18 @@
+* C:\Users\izbea\Desktop\test\DIGITAL-PSpiceFiles\SCHEMATIC1\bias\bias.stl written on Tue Nov 10 14:49:19 2020
+* by Stimulus Editor -- Serial Number: 1029007220 -- Version 17.4.0
+;!Stimulus Get
+;! ln Digital
+;!Ok
+;!Plot Axis_Settings
+;!Xrange 0s 80ms
+;!AutoUniverse
+;!XminRes 1ns
+;!YminRes 1n
+;!Ok
+.STIMULUS ln STIM (1, 1) ;! CLOCKP 20ms 10ms 0 0
++   +0s 0
++   +10ms 1
++   Repeat Forever
++      +10ms 0
++      +10ms 1
++   EndRepeat

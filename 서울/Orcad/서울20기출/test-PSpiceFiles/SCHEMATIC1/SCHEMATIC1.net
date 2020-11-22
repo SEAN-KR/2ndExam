@@ -1,0 +1,8 @@
+* source TEST
+R_R1         N01259 N01282  1k TC=0,0 
+R_R2         N01409 N01259  1k TC=0,0 
+R_R4         0 N01282  1k TC=0,0 
+E_U1         N01282 0 VALUE {LIMIT(V(0,N01259)*1E6,-15V,+15V)}
+D_D1         N01259 N01282 DLA3622-99/-55C 
+V_V2         N01409 0  
++SIN 0V 15V 100 0 0 0

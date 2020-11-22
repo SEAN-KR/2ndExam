@@ -1,0 +1,116 @@
+
+**** 11/10/20 13:52:03 ******* PSpice 17.4.0 (Nov 2018) ******* ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-test"  [ c:\users\izbea\desktop\test\test-pspicefiles\schematic1\test.sim ] 
+
+
+ ****     CIRCUIT DESCRIPTION
+
+
+******************************************************************************
+
+
+
+
+** Creating circuit file "test.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+* Local Libraries :
+* From [PSPICE NETLIST] section of C:\SPB_DATA\cdssetup\OrCAD_PSpice\17.4.0\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.TRAN  0 100ms 0 
+.OPTIONS ADVCONV
+.PROBE64 V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+
+**** INCLUDING SCHEMATIC1.net ****
+* source TEST
+R_R1         N01259 N01282  1k TC=0,0 
+R_R2         N01409 N01259  1k TC=0,0 
+R_R4         0 N01282  1k TC=0,0 
+E_U1         N01282 0 VALUE {LIMIT(V(0,N01259)*1E6,-15V,+15V)}
+D_D1         N01259 N01282 DLA3622-99/-55C 
+V_V2         N01409 0  
++SIN 0V 15V 100 0 0 0
+
+**** RESUMING test.cir ****
+.END
+
+**** 11/10/20 13:52:03 ******* PSpice 17.4.0 (Nov 2018) ******* ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-test"  [ c:\users\izbea\desktop\test\test-pspicefiles\schematic1\test.sim ] 
+
+
+ ****     Diode MODEL PARAMETERS
+
+
+******************************************************************************
+
+
+
+
+               DLA3622-99/-55C 
+          IS   32.665500E-12 
+           N    1.574182     
+          BV  230            
+         IBV    1.000000E-06 
+          RS     .075978     
+          TT  241.000000E-09 
+         CJO  595.944000E-15 
+          VJ     .695736     
+           M     .2          
+          FC     .899364     
+         XTI    6.561277     
+
+
+**** 11/10/20 13:52:03 ******* PSpice 17.4.0 (Nov 2018) ******* ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-test"  [ c:\users\izbea\desktop\test\test-pspicefiles\schematic1\test.sim ] 
+
+
+ ****     INITIAL TRANSIENT SOLUTION       TEMPERATURE =   27.000 DEG C
+
+
+******************************************************************************
+
+
+
+ NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE     NODE   VOLTAGE
+
+
+(N01259) 313.3E-27 (N01282)-313.3E-21 (N01409)    0.0000 
+
+
+
+
+    VOLTAGE SOURCE CURRENTS
+    NAME         CURRENT
+
+    V_V2         3.133E-28
+
+    TOTAL POWER DISSIPATION   0.00E+00  WATTS
+
+
+
+          JOB CONCLUDED
+
+**** 11/10/20 13:52:03 ******* PSpice 17.4.0 (Nov 2018) ******* ID# 0 ********
+
+ ** Profile: "SCHEMATIC1-test"  [ c:\users\izbea\desktop\test\test-pspicefiles\schematic1\test.sim ] 
+
+
+ ****     JOB STATISTICS SUMMARY
+
+
+******************************************************************************
+
+
+
+  Total job time (using Solver 1)   =         .13
+

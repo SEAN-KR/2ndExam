@@ -1,0 +1,18 @@
+* C:\Users\izbea\Desktop\test\DIGITAL-PSpiceFiles\SCHEMATIC1\LN2\LN2.stl written on Tue Nov 10 15:51:10 2020
+* by Stimulus Editor -- Serial Number: 0 -- Version 17.4.0
+;!Stimulus Get
+;! ln Digital
+;!Ok
+;!Plot Axis_Settings
+;!Xrange 0s 400ms
+;!AutoUniverse
+;!XminRes 1ns
+;!YminRes 1n
+;!Ok
+.STIMULUS ln STIM (1, 1) ;! CLOCKP 100ms 50ms 0 0
++   +0s 0
++   +50ms 1
++   Repeat Forever
++      +50ms 0
++      +50ms 1
++   EndRepeat

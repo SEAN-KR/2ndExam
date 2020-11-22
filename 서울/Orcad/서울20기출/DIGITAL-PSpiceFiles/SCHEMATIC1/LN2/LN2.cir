@@ -1,0 +1,21 @@
+** Profile: "SCHEMATIC1-LN2"  [ C:\Users\izbea\Desktop\test\DIGITAL-PSpiceFiles\SCHEMATIC1\LN2.sim ] 
+
+** Creating circuit file "LN2.cir" 
+** WARNING: THIS AUTOMATICALLY GENERATED FILE MAY BE OVERWRITTEN BY SUBSEQUENT SIMULATIONS
+
+*Libraries: 
+* Profile Libraries :
+.INC "C:\Users\izbea\Desktop\test\DIGITAL-PSpiceFiles\SCHEMATIC1\LN2\LN2_profile.inc" 
+* Local Libraries :
+* From [PSPICE NETLIST] section of C:\SPB_DATA\cdssetup\OrCAD_PSpice\17.4.0\PSpice.ini file:
+.lib "nom.lib" 
+
+*Analysis directives: 
+.TRAN  0 1s 0 
+.OPTIONS ADVCONV
+.OPTIONS DIGINITSTATE= 0
+.PROBE64 V(alias(*)) I(alias(*)) W(alias(*)) D(alias(*)) NOISE(alias(*)) 
+.INC "..\SCHEMATIC1.net" 
+
+
+.END
