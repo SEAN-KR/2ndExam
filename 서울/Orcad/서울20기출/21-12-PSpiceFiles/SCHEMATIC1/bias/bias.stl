@@ -1,0 +1,34 @@
+* C:\Users\izbea\Desktop\2ndExam\서울\Orcad\서울20기출\21-12-PSpiceFiles\SCHEMATIC1\bias\bias.stl written on Mon Nov 23 07:07:25 2020
+* by Stimulus Editor -- Serial Number: 0 -- Version 17.4.0
+;!Stimulus Get
+;! ln Digital aa Digital bb Digital
+;!Ok
+;!Plot Axis_Settings
+;!Xrange 0s 280ms
+;!AutoUniverse
+;!XminRes 1ns
+;!YminRes 1n
+;!Ok
+.STIMULUS ln STIM (1, 1) ;! CLOCK 100 0.5 0 0
++   +0s 0
++   +5ms 1
++   Repeat Forever
++      +5ms 0
++      +5ms 1
++   EndRepeat
+.STIMULUS A STIM (1, 1)
++   +0s 1
+.STIMULUS aa STIM (1, 1) ;! CLOCK 28 0.5 1 0
++   +0s 1
++   +17.85714285714ms 0
++   Repeat Forever
++      +17.85714285714ms 1
++      +17.85714285714ms 0
++   EndRepeat
+.STIMULUS bb STIM (1, 1) ;! CLOCK 15 0.5 0 0
++   +0s 0
++   +33.33333333333ms 1
++   Repeat Forever
++      +33.33333333333ms 0
++      +33.33333333333ms 1
++   EndRepeat
