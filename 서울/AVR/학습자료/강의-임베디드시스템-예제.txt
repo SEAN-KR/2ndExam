@@ -1,0 +1,1039 @@
+****************************************************
+임베디드시스템설계 샘플 프로그램
+
+by JCNET 신상석 (2013.12.16 업데이트)
+****************************************************
+
+
+//	**********
+//	led_1_1.c
+//	**********
+
+/* GPIO로 LED 켜고 끄기
+   LED 8개가 연결되어 있는 포트 : Port A(PA)
+	- 비트7 : LED7(LD1), 비트6 : LED6(LD2)
+	- …
+	- 비트1 : LED1(LD7), 비트0 : LED0(LD8) */
+
+#include <avr/io.h>		// ATmega128 register 정의
+int main()
+{					
+	DDRA = 0xff;		// 포트 A를 출력 포트로 사용
+	PORTA = 0xff;		// 0xff = 0b11111111, LED 모두 ON
+}
+
+
+//	**********
+//	led_1_2.c
+//	**********
+
+/* GPIO로 LED 가운데 4개 켜기 */
+
+#include <avr/io.h>		// ATmega128 register 정의
+int main()
+{					
+	DDRA = 0xff;		// 포트 A를 출력 포트로 사용
+	PORTA = 0x3c;		// 0x3c = 0b00111100, 
+}
+
+
+//	**********
+//	led_2_1.c
+//	**********
+
+/* LED 1초에 1번씩 깜빡이기 */
+
+#include <avr/io.h>		// ATmega128 register 정의
+
+void delay_sec(int sec)
+{
+	volatile int i, j, k;
+	for (i=0; i<sec; i++)
+		for (j=0; j<1000; j++)
+			 for (k=0; k<1000; k++)
+				;
+}
+
+int main()
+{					
+	DDRA = 0xff;		// 포트 A를 출력 포트로 사용
+	while (1)
+	{
+		 PORTA = 0xff;	// LED 모두 ON
+		delay_sec(1);	// 1초 기다림
+		PORTA = 0x00;	// LED 모두 OFF
+		delay_sec(1);	// 1초 기다림 	}
+}
+
+
+//	**********
+//	led_2_2.c
+//	**********
+
+/* GPIO로 LED 움직임 표현하기 : Binary Counter 구현 */
+
+#include <avr/io.h>		// ATmega128 register 정의
+
+void delay_sec(int sec)
+{
+	volatile int i, j, k;
+	for (i=0; i<sec; i++)
+		for (j=0; j<1000; j++)
+			 for (k=0; k<1000; k++)
+				;
+}
+
+int main( )
+{	
+	unsigned char count=0;	// LED용 count는 양수 1 바이트
+				// count 초기값 = 0
+	DDRA = 0xff;		// 포트 A를 출력 포트로 사용
+	while(1)			// 무한루프 실행
+	{		
+		count = count + 1;	// count 1 증가	
+		PORTA = count;	// LED에 숫자 표시
+		delay_sec(1);	// 1초 기다림
+	}
+}
+
+
+//	**********
+//	led_2_3.c
+//	**********
+
+/* LED로 X-mas Tree 만들기 */
+
+#include <avr/io.h>		// ATmega128 register 정의
+#include <stdlib.h>		// rand(), srand() 함수
+
+void delay_sec(int sec)
+{
+	volatile int i, j, k;
+	for (i=0; i<sec; i++)
+		for (j=0; j<1000; j++)
+			 for (k=0; k<1000; k++)
+				;
+}
+
+int main( )
+{	
+	DDRA = 0xff;		// 포트 A를 출력 포트로 사용
+	while(1)			// 무한루프 실행
+	{				
+		PORTA = rand( )%256;	// 0~255 난수 발생 및 LED 표시
+		delay_sec(rand()%3);	// 0~2 난수 발생 및 시간 지연
+	}
+}
+
+
+//	**********
+//	fnd_1_1.c
+//	**********
+
+/* FND에 '0' 표시하기 */
+
+#include <avr/io.h>			// ATmega128 register 정의
+
+void main() 
+{
+	DDRC = 0xff;			// C 포트는 모두 출력
+	DDRG = 0x0f;			// G 포트도 4개는 출력
+	PORTC = 0x3f;			// ‘0’ 표현
+	PORTG = 0x01;			// 가장 우측의 digit 선택
+}
+
+
+//	**********
+//	fnd_1_2.c
+//	**********
+
+/* FND에 '0'~'9' 차례로 표시하기 */
+
+#include <avr/io.h>
+#define	F_CPU 16000000UL
+#include <util/delay.h>
+
+unsigned char digit[10] = {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7c, 0x07, 0x7f, 0x67};
+
+int main() 
+{
+    int i=0;
+    DDRC = 0xff;		
+    DDRG = 0x0f;	
+    PORTG = 0x01;
+    for (i=0; i<10; i++)
+    {
+	PORTC = digit[i];
+	// 숫자 ‘0’-’9’를 차례로 출력
+	_delay_ms(1000);
+    }
+}
+
+
+//	**********
+//	fnd_2.c
+//	**********
+
+/* FND에 '1234' 표시하기 */
+
+#include <avr/io.h>
+#define	F_CPU 16000000UL
+#include <util/delay.h>
+
+unsigned char digit[10] = {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7c, 0x07, 0x7f, 0x67};
+unsigned char fnd_sel[4] = {0x01, 0x02, 0x04, 0x08}; 
+
+int main() 
+{
+    int i=0;
+    DDRC = 0xff;		
+    DDRG = 0x0f;
+    while (1)
+    {
+	for (i=0; i<4; i++)
+	{
+	    PORTC = digit[4-i];
+	    // 숫자 ‘1’-’4’를 출력
+	    PORTG = fnd_sel[i];
+	    _delay_ms(2);
+	}
+    }
+}
+
+
+
+//	**********
+//	fnd_3.c
+//	**********
+
+/* 1/100초 초시계 */
+
+#include <avr/io.h>
+#define	F_CPU 16000000UL
+#include <util/delay.h>
+
+unsigned char digit[10] = {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7c, 0x07, 0x7f, 0x67};
+unsigned char fnd_sel[4] = {0x01, 0x02, 0x04, 0x08}; 
+unsigned char fnd[4];
+
+int main() 
+{
+    int i=0, count=0;
+    DDRC = 0xff;		
+    DDRG = 0x0f;	
+    while (1)
+    {	count++;
+	if (count == 10000)
+	    count = 0;
+	fnd[3] = (count/1000)%10;
+	fnd[2] = (count/100)%10;
+	fnd[1] = (count/10)%10;
+	fnd[0] = count%10;
+	for (i=0; i<4; i++)
+	{   PORTC = digit[fnd[i]];
+	    PORTG = fnd_sel[i];
+	    _delay_ms(2);
+	    if(i%2)    _delay_ms(1);	}
+    }
+}
+
+
+//	**********
+//	fnd_4.c
+//	**********
+
+/* 자동차 전화번호 디스플레이 */
+
+#include <avr/io.h>
+#define	F_CPU 16000000UL
+#include <util/delay.h>
+
+unsigned char digit[21] = {0x00, 0x00, 0x00, 0x00, 0x3f, 0x06, 0x3f, 0x40, 0x66, 0x3f, 0x06, 0x7c, 0x40, 0x06, 0x3f, 0x7f, 0x06, 0x00, 0x00, 0x00, 0x00};
+unsigned char fnd_sel[4] = {0x01, 0x02, 0x04, 0x08}; 
+
+int main() 
+{
+    int i, j, k;
+    DDRC = 0xff;		
+    DDRG = 0x0f;	
+    while (1)
+    {      for (k=0; k<13+4; k++)
+	{
+	    for (j=0; j<100; j++)
+	    {
+	        for (i=0; i<4; i++)
+	        {  PORTC = digit[i+k];
+	    	PORTG = fnd_sel[3-i];
+	    	_delay_ms(2);
+	    	if(i%2)  _delay_ms(1);
+	        }
+	    }
+	}
+    }
+}
+
+
+//	**********
+//	sw_1.c
+//	**********
+
+/* 스위치에 따라 LED ON/OFF */
+
+#include <avr/io.h>
+
+int main(void)
+{
+	DDRA = 0xff;
+	DDRE = 0x00;
+	while (1)
+	{	if ((PINE & 0x10) == 0x00) 	// SW1 = PE bit4
+			PORTA = 0xff;		// LED = ‘ON’
+		else
+			PORTA = 0x00;		// LED = ‘OFF’
+	}
+}
+
+
+//	**********
+//	sw_2.c
+//	**********
+
+/* 스위치로 입장객 숫자 세기 */
+
+#include <avr/io.h>		// ATmega128 register 정의
+#include <avr/interrupt.h>	// interrupt 관련
+#define F_CPU 16000000UL
+#include <util/delay.h>
+
+unsigned char digit[10] = {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7c, 0x07, 0x7f, 0x67};
+unsigned char fnd_sel[4] = {0x01, 0x02, 0x04, 0x08}; 
+volatile int	count = 0;	// 전역변수(Global Variable)
+
+ISR(INT4_vect)
+{	
+	count++;
+	_delay_ms(10);		// debouncing
+}
+
+void display_fnd(int count)
+{	int i, fnd[4];
+	fnd[3] = (count/1000)%10;		// 천 자리
+	fnd[2] = (count/100)%10;		// 백 자리
+	fnd[1] = (count/10)%10;		// 십 자리
+	fnd[0] = count%10;		// 일 자리
+	for (i=0; i<4; i++)
+	{	PORTC = digit[fnd[i]];
+		PORTG = fnd_sel[i];
+		_delay_ms(2);
+	}
+}
+
+int main() 
+{
+	DDRC = 0xff;		// C 포트는 FND 데이터 신호
+	DDRG = 0x0f;		// G 포트는 FND 선택 신호
+	DDRE = 0xef;		// 0b11101111, PE4(switch1)는 입력
+	EICRB = 0x02;		// INT4 = falling edge
+	EIMSK = 0x10;		// INT4 interrupt enable
+	SREG |= 1<<7;		// SREG bit7 = I (Interrupt Enable)
+	while (1)
+		display_fnd(count);	// FND Display
+}
+
+
+//	**********
+//	sw_3.c
+//	**********
+
+/* 1/100 스톱워치 */
+
+#include <avr/io.h>		// ATmega128 register 정의
+#include <avr/interrupt.h>	// interrupt 관련
+#define F_CPU 16000000UL
+#include <util/delay.h>
+#define		STOP	0
+#define		GO	1
+
+volatile int cur_time = 0;
+volatile int stop_time = 0;
+volatile int state = STOP;	// 전역변수(Global Variable)
+unsigned char digit[]= {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7c, 0x07, 0x7f, 0x67};
+unsigned char fnd_sel[4] = {0x01, 0x02, 0x04, 0x08}; 
+
+ISR(INT4_vect)
+{	if (state == STOP)
+		state = GO;		// STOP ? GO
+	else
+	{	state = STOP;		// GO ? STOP
+		stop_time = cur_time;	// 현재시간 복사
+	}
+}
+
+ISR(INT5_vect)
+{	state = STOP;			// 초기화, 리셋
+	cur_time = 0;
+	stop_time = 0;
+}
+
+void init( )
+{
+	DDRC = 0xff;	// FND Data
+	DDRG = 0x0f;	// FND Select
+	DDRE = 0xcf;	// INT4, 5
+	PORTC = digit[0];	
+	PORTG = 0x0f;
+	EICRB = 0x0a;	//falling edge
+	EIMSK = 0x30;	//interrupt en
+	sei();		// Global Interrupt Enable
+}
+
+void display_fnd(int count)		// 수행시간 = 약 10ms
+{	
+	int i, fnd[4];
+	fnd[3] = (count/1000)%10;		// 천 자리
+	fnd[2] = (count/100)%10;		// 백 자리
+	fnd[1] = (count/10)%10;		// 십 자리
+	fnd[0] = count%10;		// 일 자리
+	for (i=0; i<4; i++)
+	{	PORTC = digit[fnd[i]];
+		PORTG = fnd_sel[i];
+		if (i%2)	_delay_ms(2);
+		else	_delay_ms(3);
+	}
+}
+
+int main() 
+{
+	init( );
+	while(1)
+	{
+		if (state == STOP)
+			display_fnd(stop_time);
+		else
+			display_fnd(cur_time);
+		cur_time++;
+	}
+}
+
+
+
+//	**********
+//	buzzer_1_1.c
+//	**********
+
+/* 삐~ 소리내기 */
+
+#include <avr/io.h>
+#define F_CPU 16000000UL
+#include <util/delay.h>
+
+int main()
+{
+	DDRB = 0x10;		// 포트 B의 bit4 를 출력 상태로 세팅
+	while(1)			// 500 Hz로 동작
+	{
+		PORTB = 0x10;	// 1ms 동안 ‘On’ 상태 유지
+		_delay_ms(1);
+		PORTB = 0x00;	// 1ms 동안 ‘Off’ 상태 유지
+		_delay_ms(1);
+	}
+}
+
+
+
+//	**********
+//	buzzer_1_2.c
+//	**********
+
+/* 전화벨 소리내기 */
+
+#include <avr/io.h>
+#define F_CPU 16000000UL
+#define __DELAY_BACKWARD_COMPATIBLE__	// for Atmel Studio 6
+#include <util/delay.h>
+
+void buzzer(int hz, int count);
+
+int main()
+{
+    int i;
+    DDRB = 0x10;		
+    while(1)			
+    {
+	for(i=0; i<20; i++)
+	{
+	    buzzer(480, 12);
+	    buzzer(320, 8);
+	}
+	_delay_ms(2000);
+    }
+}
+
+void buzzer(int hz, int count)
+{
+    int i, j, ms;
+    ms = 500/hz;
+    for(i=0; i<count; i++)
+    {
+	PORTB = 0x10;
+	    _delay_ms(ms);
+	PORTB = 0x00;
+	    _delay_ms(ms);
+    }
+}
+
+
+//	**********
+//	buzzer_2_1.c
+//	**********
+
+/* '도' 음 소리내기 */
+
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#define ON 1
+#define OFF 0
+#define DO_data 17
+
+volatile int state = OFF;
+
+ISR(TIMER0_OVF_vect)
+{
+	if (state == ON)
+	{	PORTB = 0x00;
+		state = OFF;
+	}
+	else
+	{	PORTB = 0x10;
+		state = ON;	}
+	TCNT0 = DO_data;
+}
+
+int main()
+{
+	DDRB = 0x10;
+	TCCR0 = 0x03;	// 8분주
+	TIMSK = 0x01;	// Overflow
+	TCNT0 = DO_data;
+	sei();	// 전역 인터럽트
+	while(1);
+}
+
+
+//	**********
+//	buzzer_2_2.c
+//	**********
+
+/* '산토끼' 연주하기 */
+
+#include <avr/io.h>
+#include <avr/interrupt.h>
+#define F_CPU 16000000UL
+#include <util/delay.h>
+#define DO 0
+#define RE 1
+#define MI 2
+#define FA 3
+#define SOL 4
+#define RA 5
+#define SI 6
+#define DDO 7
+#define EOS -1
+#define ON 0
+#define OFF 1
+
+volatile int state, tone;
+char f_table[8] = {17, 43, 66, 77, 97, 114, 117, 137};
+int song[] = {SOL, MI, MI, SOL, MI, DO, RE, MI, RE, DO, MI, SOL, DDO, SOL, DDO, SOL, DDO, SOL, MI, SOL, RE, FA, MI, RE, DO, EOS};
+
+ISR(TIMER0_OVF_vect)
+{
+	if (state == ON)
+	{
+		PORTB = 0x00;
+		state = OFF;
+	}
+	else
+	{
+		PORTB = 0x10;
+		state = ON;
+	}
+	TCNT0 = f_table[tone];
+}
+
+int main()
+{
+	int i=0;
+	DDRB = 0x10;
+	TCCR0 = 0x03;// 8분주
+	TIMSK = 0x01;// Overflow
+	TCNT0 = f_table[song[i]];
+	sei();	
+	do {
+		tone = song[i++];
+		_delay_ms(500);
+	}while(tone != EOS);
+}
+
+
+//	**********
+//	motor_1.c
+//	**********
+
+/* 모터 움직이기 */
+
+#include <avr/io.h>
+#define F_CPU 16000000UL
+#include <util/delay.h>
+#define MOTOR_CW	0x80
+#define MOTOR_CCW	0x40
+#define MOTOR_STOP1	0x00
+#define MOTOR_STOP2	0x11
+
+void delay_sec(int sec)
+{
+    int i;
+    for(i=0; i<1000*sec; i++)
+    	_delay_ms(1);
+}
+
+int main(void)
+{
+	DDRB = 0xff;
+	while(1)
+	{
+		PORTB = MOTOR_CW;
+		delay_sec(3);
+		PORTB = MOTOR_STOP1;
+		delay_sec(3);
+		PORTB = MOTOR_CCW;
+		delay_sec(6);
+		PORTB = MOTOR_STOP2;
+		delay_sec(3);
+	}
+}
+
+
+//	**********
+//	motor_2.c
+//	**********
+
+/* 모터 속도 조절 */
+
+#include <avr/io.h>
+#include <avr/interrupt.h>
+
+volatile int count=0;
+
+ISR(TIMER2_COMP_vect)
+{   
+    count++;
+}
+
+void motor(int sec, int speed_val)
+{
+    OCR2 = speed_val;
+    TCNT2 = 0;
+    PORTA = speed_val;
+    while(count != 1000*sec)	;
+    count = 0;
+}
+
+#define LOW	128
+#define MID	77
+#define HIGH	26
+
+int main(void)
+{
+	DDRA = 0xff;
+	DDRB = 0xff;
+	TCCR2 = 0x7B;
+	TIMSK = 0x80;
+	sei();
+	motor(5, LOW);
+	motor(5, MID);
+	motor(5, HIGH);
+	TCCR2 = 0x01;
+	PORTA = 0x00;
+}
+
+
+//	**********
+//	cds_1.c
+//	**********
+
+/* 광센서로 가로등 점멸 */
+
+#include <avr/io.h>
+#define CDS_VALUE	871	
+
+void init_adc();
+unsigned short read_adc();
+void show_adc(unsigned short value);
+
+int main()
+{
+    unsigned short value;
+    DDRA = 0xff;
+    init_adc();
+    while(1)
+    {	value = read_adc();
+	show_adc(value);	}
+}
+
+void init_adc()
+{
+	ADMUX = 0x00;      
+                   // REFS(1:0) = “00” AREF(+5V) 기준전압 사용
+                   // ADLAR = ‘0’ 디폴트 오른쪽 정렬
+                   // MUX(4:0) = “00000” ADC0 사용, 단극 입력
+	ADCSRA = 0x87; 
+	         // ADEN = ‘1’  ADC를 Enable 
+                   // ADFR = ‘0’ single conversion 모드
+                   // ADPS(2:0) = “111” 프리스케일러 128분주
+}
+
+unsigned short read_adc()
+{
+	unsigned char adc_low, adc_high;
+	unsigned short value;
+	ADCSRA |= 0x40; 	// ADC start conversion, ADSC = ‘1’
+	while ((ADCSRA & 0x10) != 0x10)	// ADC 변환 완료 검사
+		;
+	adc_low = ADCL;		// 변환된 Low 값 읽어오기
+	adc_high = ADCH;	// 변환된 High 값 읽어오기
+	value = (adc_high << 8) | adc_low;
+				// value 는 High 및 Low 연결 16비트값
+	return value;
+}
+
+void show_adc(unsigned short value)
+{
+	if (value < CDS_VALUE) 		// 기준값 미만이면
+ 		PORTA = 0xff; 		// 가로등(LED) ON
+ 	else				// 기준값 이상이면
+ 		PORTA = 0x00;		// 가로등(LED) OFF
+}
+
+
+//	**********
+//	uart_1_1.c
+//	**********
+
+/* PC로 "Hi~" 보내기 */
+
+#include <avr/io.h>		// AVR 기본 include
+#define NULL 0	
+
+void putchar0(char c)	// 1 char를 송신(Transmit)하는 함수
+{
+     while(!(UCSR0A & 0x20)) ; 	// UDRE : UCSR0A 5번 비트
+     UDR0 = c;			// 1 character 전송
+}
+
+int main()
+{
+    int i;
+    char data[]="Hi~\n\r";	// 보내고 싶은 문자열
+				// \n(New Line), \r(Carrage Return)
+    UBRR0H = 0;		// 12비트가 의미를 가짐, 
+    UBRR0L = 8;		// ATmega128 datasheet 참조 요망
+			// 16Mhz, 115200 baud의 경우
+    UCSR0B = 0x08;	// Transmit(TX) Enable
+    UCSR0C = 0x06;	// UART Mode, 8 Bit Data, No Parity, 1 Stop Bit
+    while(1)		// 연속적으로 보내기
+    {
+	i=0;
+	while (data[i]!= NULL)	// check String End
+	    putchar0(data[i++]);	// 순서대로 보내기
+    }
+}
+
+
+//	**********
+//	uart_1_2.c
+//	**********
+
+/* PC 입력 echo 하기 */
+
+#include <avr/io.h>		// AVR 기본 include
+#define NULL 0	
+
+void putchar0(char c)		// 1 char를 송신(Transmit)하는 함수
+{
+     while(!(UCSR0A & 0x20)); 	// UCSR0A 5번 비트 = UDRE
+     UDR0 = c;			// 1 character 전송
+}
+
+char getchar0()			// 1 character를 수신(receive)하는 함수
+{
+     while (!(UCSR0A & 0x80));	// UCSR0A 7번 비트 = RXC(Receiver Complete)
+     return(UDR0);		// 1 character 수신
+}
+
+void puts0(char *ptr)	// string을 송신하는 함수
+{
+	while(1)
+	{
+		if (*ptr != NULL)	//  1글자씩 송신	
+		    putchar0(*ptr++);
+		else
+			return;	// string 끝이면 종료
+	}
+}
+
+int main()
+{
+    char prompt[]=“JKIT-128-1> “;		// Prompt
+    char *ptr;
+    char c;
+    UBRR0H = 0;		// 12비트가 의미를 가짐, 
+    UBRR0L = 8;		// ATmega128 datasheet 참조 요망
+			// 16Mhz, 115200 baud의 경우
+    UCSR0B = 0x18;	// Receive(RX) 및 Transmit(TX) Enable
+    UCSR0C = 0x06;	// UART Mode, 8 Bit Data, No Parity, 1 Stop Bit
+    
+    while (1)
+    {
+	c = getchar0( );		// 1 character를 받아서
+	putchar0(c);		// 원래 character를 돌려보냄
+	if (c == '\r')		// CR(Carrage Return)이면
+	{
+	    putchar0('\n');		// NL(New Line)을 하나 더
+				// 보내서 줄바꿈을 한 뒤
+	    ptr = prompt;		// prompt(“JKIT-128-1> “)를 다시
+	    puts0(ptr);		// 내보냄
+	}
+    }
+}
+
+
+
+//	**********
+//	uart_2.c
+//	**********
+
+/* printf( ) 함수 연결 */
+
+#include <avr/io.h>		// AVR 기본 include
+#include <stdio.h>		// printf 함수를 위한 include
+
+static int putchar0(char c, FILE *stream);	// 1 char 송신(Transmit)
+static FILE mystdout = FDEV_SETUP_STREAM(putchar0, NULL, _FDEV_SETUP_WRITE);
+int putchar0(char c, FILE *stream)
+{
+     if (c == ‘\n’)
+	putchar0(‘\r’, stream);
+     while(!(UCSR0A & 0x20)); 	// UCSR0A 5번 비트 = UDRE
+     UDR0 = c;			// 1 character 전송
+     return 0;
+}
+
+char getchar0()		// 1 character를 수신(receive)하는 함수
+{
+     while (!(UCSR0A & 0x80)); 	// UCSR0A 7번 비트 = RXC
+     return(UDR0);		// 1 character 수신
+}
+
+void init_uart()
+{
+    UBRR0H = 0;		// 12비트가 의미를 가짐, 
+    UBRR0L = 8;		// ATmega128 datasheet 참조 요망
+			// 16Mhz, 115200 baud의 경우
+    UCSR0B = 0x18;	// Receive(RX) 및 Transmit(TX) Enable
+    UCSR0C = 0x06;	// UART Mode, 8 Bit Data, No Parity, 1 Stop Bit
+}
+
+int main()
+{
+    char c; int i;
+    init_uart();
+    stdout = &mystdout;
+    while (1)
+    {	printf(“Input Number for GuGuDan : “);
+	c = getchar0( );		// 1 character를 받아서
+	printf(“%c\n“, c);		// 원래 character를 돌려보냄
+	c = c ? ‘0’;		// ASCII ? 숫자로 변환
+	for(i=1; i<=9; i++)	// 구구단 디스플레이
+		printf(“\t%d x %d = %d\n”, c, i, c*i);
+    }
+}
+
+
+
+//	**********
+//	temp_1.c
+//	**********
+
+/* 디지털 온도계 */
+
+#define F_CPU 	16000000UL	// CPU 클록 값 = 16 Mhz
+#define F_SCK	40000UL		// SCK 클록 값 = 40 Khz
+#include <avr/io.h>
+#include <util/delay.h>
+#define ATS75_ADDR	0x98	// 0b10011000, 7비트를 1비트 left shift
+#define ATS75_CONFIG_REG		1
+#define ATS75_TEMP_REG		0
+
+void init_twi_port();
+void write_twi_1byte_nopreset(char reg, char data);
+int read_twi_2byte_nopreset(char reg);
+void display_FND(int value);
+
+int main()
+{	
+	int	temperature;
+	init_twi_port();		// TWI 및 포트 초기화
+	write_twi_1byte_nopreset(ATS75_CONFIG_REG, 0x00); // 9비트, Normal
+	_delay_ms(100);		// 다음 사이클을 위하여 잠시 기다림
+	while (1) 			// 온도값 읽어 FND 디스플레이
+	{		
+	    temperature = read_twi_2byte_nopreset(ATS75_TEMP_REG);
+	    display_FND(temperature); 
+	}
+}
+
+void init_twi_port()
+{	
+	DDRC = 0xff; DDRG = 0xff;	// FND 출력 세팅
+	PORTD = 3; 		// For Internal pull-up for SCL & SCK
+	SFIOR &= ~(1<<PUD); 	// PUD = 0 : Pull Up Disable
+	TWBR = (F_CPU/F_SCK - 16) / 2;	// 공식 참조, bit trans rate 설정
+	TWSR = TWSR & 0xfc;		// Prescaler 값 = 00 (1배)
+}
+
+void write_twi_1byte_nopreset(char reg, char data)
+{
+	TWCR = (1 << TWINT) | (1<<TWSTA) | (1<<TWEN);// START 전송
+	while (((TWCR & (1 << TWINT)) == 0x00) || (TWSR & 0xf8) != 0x08) ;		// START 상태 검사, 이후 모두 상태 검사
+	TWDR = ATS75_ADDR | 0;			// SLA+W 준비, W=0
+	TWCR = (1 << TWINT) | (1 << TWEN);		// SLA+W 전송
+	while (((TWCR & (1 << TWINT)) == 0x00) || (TWSR & 0xf8) != 0x18) ;
+	TWDR = reg;				// aTS75 Reg 값 준비
+	TWCR = (1 << TWINT) | (1 << TWEN);		// aTS75 Reg 값 전송
+	while (((TWCR & (1 << TWINT)) == 0x00) || (TWSR & 0xf8) != 0x28) ;
+	TWDR = data;				// DATA 준비
+	TWCR = (1 << TWINT) | (1 << TWEN);		// DATA 전송
+	while (((TWCR & (1 << TWINT)) == 0x00) || (TWSR & 0xf8) != 0x28) ;
+	TWCR = (1 << TWINT) | (1 << TWSTO) | (1 << TWEN);	// STOP 전송
+}
+
+int read_twi_2byte_nopreset(char reg)
+{	
+	char high_byte, low_byte;
+	TWCR = (1 << TWINT) | (1<<TWSTA) | (1<<TWEN);// START 전송
+	while (((TWCR & (1 << TWINT)) == 0x00) || (TWSR & 0xf8) != 0x08) ;		// START 상태 검사, 이후 ACK 및 상태 검사
+	TWDR = ATS75_ADDR | 0;			// SLA+W 준비, W=0
+	TWCR = (1 << TWINT) | (1 << TWEN);		// SLA+W 전송
+	while (((TWCR & (1 << TWINT)) == 0x00) || (TWSR & 0xf8) != 0x18) ;
+	TWDR = reg;				// aTS75 Reg 값 준비
+	TWCR = (1 << TWINT) | (1 << TWEN);		// aTS75 Reg 값 전송
+	while (((TWCR & (1 << TWINT)) == 0x00) || (TWSR & 0xf8) != 0x28) ;
+	TWCR = (1 << TWINT) | (1<<TWSTA) | (1<<TWEN);// RESTART 전송
+	while (((TWCR & (1 << TWINT)) == 0x00) || (TWSR & 0xf8) != 0x10) ;		// RESTART 상태 검사, 이후 ACK, NO_ACK 상태 검사
+	TWDR = ATS75_ADDR | 1;			// SLA+R 준비, R=1
+	TWCR = (1 << TWINT) | (1 << TWEN);		// SLA+R 전송
+	while (((TWCR & (1 << TWINT)) == 0x00) || (TWSR & 0xf8) != 0x40) ;
+	TWCR = (1 << TWINT) | (1 << TWEN | 1 << TWEA);// 1st DATA 준비
+	while(((TWCR & (1 << TWINT)) == 0x00) || (TWSR & 0xf8) != 0x50);
+	high_byte = TWDR;				// 1st DATA 수신
+	TWCR = (1 << TWINT) | (1 << TWEN);// 2nd DATA 준비
+	while(((TWCR & (1 << TWINT)) == 0x00) || (TWSR & 0xf8) != 0x58);
+	low_byte = TWDR;				// 2nd DATA 수신
+	TWCR = (1 << TWINT) | (1 << TWSTO) | (1 << TWEN);	// STOP 전송
+	return((high_byte<<8) | low_byte);		// 수신 DATA 리턴
+}
+
+void display_FND(int value)
+{
+	char digit[12] = {0x3f, 0x06, 0x5b, 0x4f, 0x66, 0x6d, 0x7c, 0x07, 0x7f, 0x67, 0x40, 0x00};
+	char fnd_sel[4] = {0x01, 0x02, 0x04, 0x08}; 
+
+	char value_int, value_deci, num[4];
+	int i;
+	if((value & 0x8000) != 0x8000)		// Sign 비트 체크
+		num[3] = 11;
+	else
+	{	num[3] = 10;
+		value = (~value)-1;			// 2’s Compliment
+	}
+	value_int = (char)((value & 0x7f00) >> 8);
+	value_deci = (char)(value & 0x00ff);
+	num[2] = (value_int / 10) % 10;
+	num[1] = value_int % 10;
+	num[0] = ((value_deci & 0x80) == 0x80) * 5; 
+	for(i=0; i<4; i++)
+	{
+		PORTC = digit[num[i]];
+		PORTG = fnd_sel[i];
+		if(i==1)
+			PORTC |= 0x80;
+		_delay_ms(2);
+	}
+}
+
+
+
+//	**********
+//	dotmatrix_1.c
+//	**********
+
+/* Dot Matrix로 하트 그리기 - 외부 GPIO 포트 연결 */
+
+#include <avr/io.h>
+#define F_CPU 16000000UL
+#include <util/delay.h>
+
+int main()
+{
+	unsigned char data[] =
+	{0x22, 0x77, 0xff, 0xff, 0xfe, 0x7c, 0x38, 0x10, 0x00};	// Heart
+	int i;
+	DDRA = 0xff;
+	DDRC = 0xff;
+	while(1)
+	{
+		for (i=0; i<8; i++)
+		{
+			PORTA = data[i];
+			PORTC = 1 << i;
+			_delay_ms(1);
+		}	
+	}
+}
+
+
+//	**********
+//	dotmatrix_2.c
+//	**********
+
+/* Dot Matrix로 사랑 고백하기 - 외부 GPIO 포트 연결 */
+
+#include <avr/io.h>
+#define F_CPU 16000000UL
+#include <util/delay.h>
+
+int main()
+{
+	unsigned char data[] =
+	{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,	// Blank
+	0x3c, 0x18, 0x18, 0x18, 0x18, 0x18, 0x18, 0x3c, 0x00,	// I
+	0x22, 0x77, 0xff, 0xff, 0xfe, 0x7c, 0x38, 0x10, 0x00,	// ♥
+	0x66, 0x66, 0x7e, 0x3c, 0x18, 0x18, 0x18, 0x3c, 0x00,	// Y
+	0x3c, 0x7e, 0x66, 0x66, 0x66, 0x66, 0x7e, 0x3c, 0x00,	// O
+	0x66, 0x66, 0x66, 0x66, 0x66, 0x66, 0x7e, 0x3e, 0x00,	// U
+	0x08, 0x18, 0x18, 0x18, 0x10, 0x00, 0x30, 0x30, 0x30}; // !	
+	int i, j, k=0;
+	DDRA = 0xff;
+	DDRC = 0xff;
+	while(1)
+	{
+		for (k=0; k<55; k++)
+			for (j=0; j<30; j++)
+				for (i=0; i<8; i++)
+				{	PORTA = data[i+k];
+					PORTC = 1 << i;
+					_delay_ms(1);
+				}	
+	}
+}
