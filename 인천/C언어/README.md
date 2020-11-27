@@ -3,7 +3,7 @@
 ## C언어 과제 사이트 링크
 https://programmers.co.kr/learn/challenges?tab=all_challenges
 
-## 설치하는 법
+## 비주얼 스튜디오 설치하는 법
 https://youtu.be/F-FNih33PAE
 
 ## 비주얼 스튜디오 디버깅 하는법
