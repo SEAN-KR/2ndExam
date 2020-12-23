@@ -12,6 +12,7 @@ https://www.devicemart.co.kr/goods/view?no=1059759
 ---
 ## [제이씨넷] Atmega128 AVR 개발/실습키트 JKIT-128-1
 ### 알려진 문제점
-<img src = "./etc/avrimg.JPG" width="50%">
+
+<img src = "./etc/avrimg.jpg" width="50%">
 
 솔류션 => C15, C16에 커패시터를 달아서 해결
