@@ -16,4 +16,5 @@ https://www.devicemart.co.kr/goods/view?no=1059759
 <img src = "./etc/avrimg.jpg" width="50%">
 
 문제점 => 외부인터럽트를 이용하여 버튼 사용시, 여러번의 입력이 들어올수 있습니다.
+
 솔류션 => C15, C16에 커패시터를 달아서 해결
